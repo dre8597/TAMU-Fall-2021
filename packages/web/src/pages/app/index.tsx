@@ -1,7 +1,10 @@
 import { Heading } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import { AppLayout } from '../../components/Layout';
-import { Button, HStack} from '@chakra-ui/react';
+import { Button, HStack, Text, VStack} from '@chakra-ui/react';
+import React from 'react';
+import Link from 'next/link';
+import { GiCrossFlare } from 'react-icons/gi';
 
 var rating = 0;
 const likeClick = () =>  {
@@ -17,7 +20,12 @@ const dislikeClick = () =>  {
 const AppHome: NextPage = () => {
   return (
     <AppLayout>
-      <Heading>Map Page</Heading>
+      <HStack>
+        <Link href="/app" passHref>
+          <GiCrossFlare size="36px" />
+        </Link>
+        <Heading>Map Page</Heading>
+      </HStack>
       
 
       <HStack spacing={4}>
