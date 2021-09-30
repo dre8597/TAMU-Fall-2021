@@ -4,6 +4,7 @@ import { web } from '@x/web';
 import { api } from './api';
 import { env } from './env';
 import logger from './logger';
+import { login } from './api/login';
 
 const app = express();
 const port = Number(env.port ?? '') || 3000;
@@ -14,6 +15,7 @@ void (async () => {
 
   const webHandler = await web({ dev });
 
+  app.all('/app/login', /* loginMiddleware, */ webHandler);
   app.all('/app', /* loginMiddleware, */ webHandler);
   app.all('*', webHandler);
 })()

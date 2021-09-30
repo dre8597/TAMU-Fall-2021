@@ -1,13 +1,3 @@
-// import { Heading } from '@chakra-ui/react';
-// import { AppLayout } from '../../components/Layout';
-
-// export default() => {
-//     return (
-//         <AppLayout>
-//       <Heading>Login Page</Heading>
-//     </AppLayout>
-//     );
-// }
 
 import {
     ThemeProvider,
@@ -26,10 +16,16 @@ import {
     Input,
     Stack,
     Checkbox,
-    Button
+    Button,
+    CircularProgress
   } from '@chakra-ui/react'
-import { NextPage } from 'next';
 import { AppLayout } from '../../components/Layout';
+import React, { useState, useEffect } from "react";
+//@ts-ignore
+import { userLogin } from '../../utils/api';
+//@ts-ignore
+import ErrorMessage from '../../components/ErrorMessage';
+
 
 
 const VARIANT_COLOR = 'blue'
@@ -48,16 +44,47 @@ const App = () => {
   }
 
   const LoginForm = () => {
+
+    
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const[isLoading, setIsLoading] = useState(false);
+
+    const registerUser = async (event: React.SyntheticEvent) => {
+        
+        event.preventDefault();
+        setIsLoading(true);
+
+        try {
+          await userLogin({ username, password });
+          setIsLoading(false);
+        } catch (error) {
+          setError('Invalid username or password');
+          setIsLoading(false);
+          setUsername('');
+          setPassword('');
+          
+        }        
+    
+    }
+
+
     return (
       <Box my={8} textAlign='left'>
-        <form>
-  
+        <form onSubmit={registerUser}>
+        {error && <ErrorMessage message={error} />}
           <FormControl>
-            <Input type='email' placeholder='Username' />
+            <Input 
+                type='username' 
+                placeholder='Username' 
+                onChange= {event => setUsername(event.currentTarget.value)}/>
           </FormControl>
   
           <FormControl mt={4}>
-            <Input type='password' placeholder='Password' />
+            <Input type='password' 
+            placeholder='Password' 
+            onChange= {event => setPassword(event.currentTarget.value)}/>
           </FormControl>
   
           <Stack isInline justifyContent='space-between' mt={4}>
@@ -69,9 +96,14 @@ const App = () => {
               </Box>
           </Stack>
   
-          <Button variantColor={VARIANT_COLOR}  width='full' mt={4}>Sign In</Button>
+          <Button type='submit' variantColor={VARIANT_COLOR}  width='full' mt={4}>{isLoading ? (
+    <CircularProgress isIndeterminate size="24px" color="teal" />
+  ) : (
+    'Sign In'
+  )}</Button>
         </form>
       </Box>
+      
     )
     }
 
@@ -105,6 +137,6 @@ const App = () => {
           </Box>
         )
       }
-
       
-  export default App  
+  export default App    
+
